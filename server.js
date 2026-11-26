@@ -13,6 +13,9 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
 // Connect to MySQL using environment variables
+console.log("Database host:", process.env.MYSQLHOST);
+console.log("Database port:", process.env.MYSQLPORT);
+console.log("Database name:", process.env.MYSQLDATABASE);
 const db = mysql.createPool({
     host: process.env.MYSQLHOST,
     port: process.env.MYSQLPORT || 3306,
