@@ -27,6 +27,17 @@ const db = mysql.createPool({
     connectionLimit: 10
 });
 
+
+db.getConnection()
+    .then(connection => {
+        console.log("MySQL connected successfully!");
+
+        connection.release();
+    })
+    .catch(error => {
+        console.error("MySQL connection failed:", error.message);
+    });
+
 // Create table automatically if it does not exist
 async function initializeDatabase() {
     await db.query(`
