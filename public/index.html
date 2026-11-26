@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Registration</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 450px;
+            margin: 30px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ccc;
+        }
+
+        h2 {
+            text-align: center;
+            color: #2563eb;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            margin-top: 6px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 12px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            background: #888;
+            cursor: not-allowed;
+        }
+
+        #message {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Student Registration Form</h2>
+
+    <form id="studentForm">
+
+        <label for="student_name">Student Name</label>
+        <input type="text" id="student_name"
+               maxlength="100" required>
+
+        <label for="email">Email Address</label>
+        <input type="email" id="email"
+               maxlength="150" required>
+
+        <label for="mobile">Mobile Number</label>
+        <input type="tel" id="mobile"
+               pattern="[0-9]{10,15}"
+               maxlength="15"
+               title="Enter 10 to 15 digits"
+               required>
+
+        <label for="college">College Name</label>
+        <input type="text" id="college"
+               maxlength="150" required>
+
+        <label for="course">Course Name</label>
+        <input type="text" id="course"
+               maxlength="100" required>
+
+        <button type="submit" id="submitBtn">
+            Submit Registration
+        </button>
+
+    </form>
+
+    <p id="message"></p>
+
+</div>
+
+<script>
+    const form = document.getElementById("studentForm");
+    const message = document.getElementById("message");
+    const submitBtn = document.getElementById("submitBtn");
+
+    form.addEventListener("submit", async function(event) {
+
+        event.preventDefault();
+
+        message.textContent = "";
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Submitting...";
+
+        const studentData = {
+            student_name: document.getElementById("student_name").value.trim(),
+            email: document.getElementById("email").value.trim(),
+            mobile: document.getElementById("mobile").value.trim(),
+            college: document.getElementById("college").value.trim(),
+            course: document.getElementById("course").value.trim()
+        };
+
+        try {
+            const response = await fetch("/api/students", {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(studentData)
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                message.style.color = "green";
+                message.textContent = result.message;
+
+                form.reset();
+            } else {
+                message.style.color = "red";
+                message.textContent = result.message;
+            }
+
+        } catch (error) {
+            message.style.color = "red";
+            message.textContent =
+                "Could not connect to server.";
+        }
+
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit Registration";
+    });
+</script>
+
+</body>
+</html>
