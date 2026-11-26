@@ -17,7 +17,8 @@ console.log("Database host:", process.env.MYSQLHOST);
 console.log("Database port:", process.env.MYSQLPORT);
 console.log("Database name:", process.env.MYSQLDATABASE);
 const db = mysql.createPool({
-    host: process.env.MYSQLHOST,
+    //host: process.env.MYSQLHOST,
+    host: process.env.MYSQLHOST || "127.0.0.1",
     port: process.env.MYSQLPORT || 3306,
     user: process.env.MYSQLUSER,
     password: process.env.MYSQLPASSWORD,
