@@ -13,19 +13,50 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
 // Connect to MySQL using environment variables
-console.log("Database host:", process.env.MYSQLHOST);
-console.log("Database port:", process.env.MYSQLPORT);
-console.log("Database name:", process.env.MYSQLDATABASE);
+// console.log("Database host:", process.env.MYSQLHOST);
+// console.log("Database port:", process.env.MYSQLPORT);
+// console.log("Database name:", process.env.MYSQLDATABASE);
+// const db = mysql.createPool({
+//     //host: process.env.MYSQLHOST,
+//     host: process.env.MYSQLHOST,
+//     port: process.env.MYSQLPORT || 3306,
+//     user: process.env.MYSQLUSER,
+//     password: process.env.MYSQLPASSWORD,
+//     database: process.env.MYSQLDATABASE,
+//     waitForConnections: true,
+//     connectionLimit: 10
+// });
+
+
+
+const dbHost = process.env.MYSQLHOST;
+const dbPort = Number(process.env.MYSQLPORT || 3306);
+
+console.log("DB HOST:", dbHost || "MISSING");
+console.log("DB PORT:", dbPort);
+console.log("DB NAME:", process.env.MYSQLDATABASE || "MISSING");
+console.log("DB USER SET:", Boolean(process.env.MYSQLUSER));
+console.log("DB PASSWORD SET:", Boolean(process.env.MYSQLPASSWORD));
+
+if (!dbHost || dbHost === "localhost" || dbHost === "127.0.0.1") {
+    throw new Error(
+        "MYSQLHOST is missing or incorrect. Check Railway Variables."
+    );
+}
+
 const db = mysql.createPool({
-    //host: process.env.MYSQLHOST,
-    host: process.env.MYSQLHOST,
-    port: process.env.MYSQLPORT || 3306,
+    host: dbHost,
+    port: dbPort,
     user: process.env.MYSQLUSER,
     password: process.env.MYSQLPASSWORD,
     database: process.env.MYSQLDATABASE,
     waitForConnections: true,
     connectionLimit: 10
 });
+
+
+
+
 
 
 db.getConnection()
